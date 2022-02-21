@@ -57,6 +57,14 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press""
+                },
+                {
+                    ""name"": ""roll"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c6645e1-5164-4884-9a05-8f9e6ba2e881"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -213,6 +221,28 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                     ""action"": ""right attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b645e5e0-8ff2-4bba-821c-c54d8b174faa"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9dd85636-9591-42db-8b0b-25320b964b1c"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -226,6 +256,7 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_leftattack = m_Player.FindAction("left attack", throwIfNotFound: true);
         m_Player_rightattack = m_Player.FindAction("right attack", throwIfNotFound: true);
+        m_Player_roll = m_Player.FindAction("roll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -280,6 +311,7 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_leftattack;
     private readonly InputAction m_Player_rightattack;
+    private readonly InputAction m_Player_roll;
     public struct PlayerActions
     {
         private @PlayerInputAsset m_Wrapper;
@@ -289,6 +321,7 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @leftattack => m_Wrapper.m_Player_leftattack;
         public InputAction @rightattack => m_Wrapper.m_Player_rightattack;
+        public InputAction @roll => m_Wrapper.m_Player_roll;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -313,6 +346,9 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                 @rightattack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightattack;
                 @rightattack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightattack;
                 @rightattack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightattack;
+                @roll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
+                @roll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
+                @roll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -332,6 +368,9 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                 @rightattack.started += instance.OnRightattack;
                 @rightattack.performed += instance.OnRightattack;
                 @rightattack.canceled += instance.OnRightattack;
+                @roll.started += instance.OnRoll;
+                @roll.performed += instance.OnRoll;
+                @roll.canceled += instance.OnRoll;
             }
         }
     }
@@ -343,5 +382,6 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnLeftattack(InputAction.CallbackContext context);
         void OnRightattack(InputAction.CallbackContext context);
+        void OnRoll(InputAction.CallbackContext context);
     }
 }

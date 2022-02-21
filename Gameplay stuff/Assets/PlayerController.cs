@@ -13,9 +13,12 @@ public class PlayerController : MonoBehaviour
     private InputAction move;
     private Rigidbody rb;
     private Vector3 player_dir = Vector3.zero;
+    private Vector3 look_dir;
     private Animator player_animator;
     private bool grounded;
     private bool can_jump = true;
+    private bool can_roll = true;
+    float roll_force = 250;
 
     [SerializeField]
     private float player_speed = 5;
@@ -43,6 +46,7 @@ public class PlayerController : MonoBehaviour
         player_input.Enable();
         move = player_input.Player.Movement;
         player_input.Player.Jump.started += jump;
+        player_input.Player.roll.started += roll;
         player_input.Player.leftattack.started += leftAttack;
         player_input.Player.rightattack.started += rightAttack;
     }
@@ -50,9 +54,20 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         player_input.Player.Jump.started -= jump;
+        player_input.Player.roll.started -= roll;
         player_input.Player.leftattack.started -= leftAttack;
         player_input.Player.rightattack.started -= rightAttack;
         player_input.Disable();
+    }
+
+    private void roll(InputAction.CallbackContext ctx)
+    {
+        if(can_roll)
+        {
+            player_animator.SetTrigger("roll");
+            player_dir += rb.transform.forward * roll_force;
+        }
+        can_roll = false;
     }
 
     private void jump(InputAction.CallbackContext ctx)
@@ -89,12 +104,18 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(grounded);
+        Debug.Log(look_dir);
 
         if(!can_jump)
         {
             Invoke("setCanJump", 1);
         }
+        if (!can_roll)
+        {
+            Invoke("setCanRoll", 1);
+        }
+
+
 
         grounded = isGrounded();
         player_animator.SetFloat("speed", rb.velocity.magnitude / max_speed);
@@ -117,6 +138,7 @@ public class PlayerController : MonoBehaviour
         player_dir += move.ReadValue<Vector2>().y * GetCameraForward(cam) * player_speed;
 
         rb.AddForce(player_dir, ForceMode.Impulse);
+
         player_dir = Vector3.zero;
 
       
@@ -159,7 +181,7 @@ public class PlayerController : MonoBehaviour
 
     private void lookAt()
     {
-        Vector3 look_dir = rb.velocity;
+        look_dir = rb.velocity;
 
         look_dir.y = 0;
 
@@ -175,5 +197,9 @@ public class PlayerController : MonoBehaviour
     void setCanJump()
     {
         can_jump = true;
+    }
+    void setCanRoll()
+    {
+        can_roll = true;
     }
 }
