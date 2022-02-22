@@ -72,6 +72,7 @@ public class PlayerController : MonoBehaviour
             player_animator.SetTrigger("roll");
         }
         can_roll = false;
+        Invoke("setCanRoll", 1.2f);
     }
 
     private void jump(InputAction.CallbackContext ctx)
@@ -111,10 +112,6 @@ public class PlayerController : MonoBehaviour
         {
             Invoke("setCanJump", 1);
         }
-        if (!can_roll)
-        {
-            Invoke("setCanRoll", 1);
-        }
 
         grounded = isGrounded();
         player_animator.SetFloat("speed", rb.velocity.magnitude / max_speed);
@@ -147,7 +144,6 @@ public class PlayerController : MonoBehaviour
             player_animator.SetBool("falling", true);
             rb.velocity -= Vector3.down * Physics.gravity.y * 8 * Time.fixedDeltaTime;
         }
-  
 
         Vector3 h_velocity = rb.velocity;
         h_velocity.y = 0;
@@ -156,6 +152,14 @@ public class PlayerController : MonoBehaviour
         if (h_velocity.sqrMagnitude > max_speed * max_speed)
         {
             rb.velocity = h_velocity.normalized * max_speed + Vector3.up * rb.velocity.y;
+        }
+        if (h_velocity == Vector3.zero)
+        {
+            can_roll = false;
+        }
+        else
+        {
+            can_roll = true;
         }
 
         lookAt();
