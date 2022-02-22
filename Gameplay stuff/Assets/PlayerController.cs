@@ -18,19 +18,19 @@ public class PlayerController : MonoBehaviour
     private bool grounded;
     private bool can_jump = true;
     private bool can_roll = true;
-    float roll_force = 250;
+    float roll_force = 15;
 
     [SerializeField]
-    private float player_speed = 5;
+
+    private float default_player_speed = 5;
+    private float player_speed;
+    
 
     [SerializeField]
     private float max_speed = 20;
 
     [SerializeField]
     private float jump_force = 70;
-    
-
-
 
 
     private void Awake()
@@ -38,7 +38,11 @@ public class PlayerController : MonoBehaviour
         player_input = new PlayerInputAsset();
         player_animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        player_speed = default_player_speed;
 
+        Cursor.lockState = CursorLockMode.Locked;
+
+        Cursor.visible = false;
     }
 
       private void OnEnable()
@@ -64,8 +68,8 @@ public class PlayerController : MonoBehaviour
     {
         if(can_roll)
         {
+            player_speed += roll_force;
             player_animator.SetTrigger("roll");
-            player_dir += rb.transform.forward * roll_force;
         }
         can_roll = false;
     }
@@ -91,10 +95,8 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = new Ray(this.transform.position + Vector3.up * 0.25f, Vector3.down)
 ;
-
         if(Physics.Raycast(ray, out RaycastHit hit, 0.5f))
         {
-
             return true;
         }
         else
@@ -104,7 +106,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(look_dir);
 
         if(!can_jump)
         {
@@ -114,8 +115,6 @@ public class PlayerController : MonoBehaviour
         {
             Invoke("setCanRoll", 1);
         }
-
-
 
         grounded = isGrounded();
         player_animator.SetFloat("speed", rb.velocity.magnitude / max_speed);
@@ -201,5 +200,6 @@ public class PlayerController : MonoBehaviour
     void setCanRoll()
     {
         can_roll = true;
+        player_speed = default_player_speed;
     }
 }
