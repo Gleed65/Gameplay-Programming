@@ -18,19 +18,11 @@ public class PlayerController : MonoBehaviour
     private bool grounded;
     private bool can_jump = true;
     private bool can_roll = true;
-    float roll_force = 15;
-
-    [SerializeField]
-
+    float roll_force = 10;
     private float default_player_speed = 5;
     private float player_speed;
-    
-
-    [SerializeField]
     private float max_speed = 20;
-
-    [SerializeField]
-    private float jump_force = 70;
+    private float jump_force = 120;
 
 
     private void Awake()
@@ -73,6 +65,7 @@ public class PlayerController : MonoBehaviour
         }
         can_roll = false;
         Invoke("setCanRoll", 1.2f);
+        Invoke("setDefaultSpeed", 0.6f);
     }
 
     private void jump(InputAction.CallbackContext ctx)
@@ -108,6 +101,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
 
+        
         if(!can_jump)
         {
             Invoke("setCanJump", 1);
@@ -147,6 +141,8 @@ public class PlayerController : MonoBehaviour
 
         Vector3 h_velocity = rb.velocity;
         h_velocity.y = 0;
+
+        Debug.Log(h_velocity);
 
 
         if (h_velocity.sqrMagnitude > max_speed * max_speed)
@@ -204,6 +200,10 @@ public class PlayerController : MonoBehaviour
     void setCanRoll()
     {
         can_roll = true;
+        
+    }
+    void setDefaultSpeed()
+    {
         player_speed = default_player_speed;
     }
 }
