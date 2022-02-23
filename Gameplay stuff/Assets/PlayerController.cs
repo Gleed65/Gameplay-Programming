@@ -18,19 +18,14 @@ public class PlayerController : MonoBehaviour
     private bool grounded;
     private bool can_jump = true;
     private bool can_roll = true;
-    float roll_force = 15;
-
-    [SerializeField]
-
+    float roll_force = 10;
     private float default_player_speed = 5;
     private float player_speed;
-    
-
-    [SerializeField]
     private float max_speed = 20;
-
+    private float jump_force = 120;
+    private float jump_counter = 0;
     [SerializeField]
-    private float jump_force = 70;
+    private bool double_jump_active = true;
 
 
     private void Awake()
@@ -45,7 +40,7 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
     }
 
-      private void OnEnable()
+    private void OnEnable()
     {
         player_input.Enable();
         move = player_input.Player.Movement;
@@ -66,23 +61,50 @@ public class PlayerController : MonoBehaviour
 
     private void roll(InputAction.CallbackContext ctx)
     {
-        if(can_roll)
+        if (can_roll)
         {
             player_speed += roll_force;
             player_animator.SetTrigger("roll");
         }
         can_roll = false;
         Invoke("setCanRoll", 1.2f);
+        Invoke("setDefaultSpeed", 0.6f);
     }
 
     private void jump(InputAction.CallbackContext ctx)
     {
-        if(isGrounded() && can_jump)
+        /*if (isGrounded() && can_jump)
         {
             player_animator.SetBool("jumping", true);
             can_jump = false;
             player_dir += Vector3.up * jump_force;
+            jump_counter++;
+        }*/
+
+        if(can_jump)
+        {
+            if(!double_jump_active && isGrounded())
+            {
+                player_animator.SetBool("jumping", true);
+                can_jump = false;
+                player_dir += Vector3.up * jump_force; 
+                Invoke("setCanJump", 1.2f);
+            }
+            if(double_jump_active)
+            {
+                player_animator.SetBool("jumping", true);
+                player_dir += Vector3.up * jump_force;
+
+               /* if(isGrounded())
+                {
+                    Invoke("setCanJump", 0.2f);
+                }*/
+
+                jump_counter++;
+            }
         }
+
+      
     }
     private void leftAttack(InputAction.CallbackContext ctx)
     {
@@ -96,8 +118,9 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = new Ray(this.transform.position + Vector3.up * 0.25f, Vector3.down)
 ;
-        if(Physics.Raycast(ray, out RaycastHit hit, 0.5f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 0.5f))
         {
+            
             return true;
         }
         else
@@ -107,16 +130,23 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log(can_jump);
 
-        if(!can_jump)
+        if (isGrounded())
         {
-            Invoke("setCanJump", 1);
+            jump_counter = 0;
+            Invoke("setCanJump", 0.2f);
         }
 
+        if (jump_counter >= 1)
+        {
+            can_jump = false;
+            jump_counter = 0;
+        }
         grounded = isGrounded();
         player_animator.SetFloat("speed", rb.velocity.magnitude / max_speed);
 
-        if(grounded)
+        if (grounded)
         {
             player_animator.SetBool("grounded", true);
             player_animator.SetBool("falling", false);
@@ -137,7 +167,7 @@ public class PlayerController : MonoBehaviour
 
         player_dir = Vector3.zero;
 
-      
+
         if (rb.velocity.y < 0f)
         {
             player_animator.SetBool("jumping", false);
@@ -188,7 +218,7 @@ public class PlayerController : MonoBehaviour
 
         look_dir.y = 0;
 
-        if(move.ReadValue<Vector2>().sqrMagnitude > 0.1 && look_dir.sqrMagnitude > 0.1f)
+        if (move.ReadValue<Vector2>().sqrMagnitude > 0.1 && look_dir.sqrMagnitude > 0.1f)
         {
             this.rb.rotation = Quaternion.LookRotation(look_dir, Vector3.up);
         }
@@ -204,6 +234,26 @@ public class PlayerController : MonoBehaviour
     void setCanRoll()
     {
         can_roll = true;
+
+    }
+    void setNormalJump()
+    {
+        double_jump_active = false;
+    }
+    void setDefaultSpeed()
+    {
         player_speed = default_player_speed;
+    }
+
+    public void addSpeedPowerUp(float speed_boost, float time)
+    {
+        Debug.Log("add speed");
+        player_speed += speed_boost;
+        Invoke("setDefaultSpeed", time);
+    }
+    public void setDoubleJump(float time)
+    {
+        double_jump_active = true;
+        Invoke("setNormalJump", time);
     }
 }
