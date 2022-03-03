@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     //Using the C# script
 
     private PlayerInputAsset player_input;
+    public ParticleSystem trail_system;
     public Camera cam;
     private InputAction move;
     private Rigidbody rb;
@@ -19,13 +20,15 @@ public class PlayerController : MonoBehaviour
     private bool can_jump = true;
     private bool can_roll = true;
     float roll_force = 10;
-    private float default_player_speed = 5;
+    private float default_player_speed = 8;
     private float player_speed;
     private float max_speed = 20;
     private float jump_force = 120;
     private float jump_counter = 0;
     [SerializeField]
-    private bool double_jump_active = true;
+    public bool double_jump_active = false;
+    public bool speed_boost_active = false;
+    private float rod_timer = 0;
 
 
     private void Awake()
@@ -68,19 +71,16 @@ public class PlayerController : MonoBehaviour
         }
         can_roll = false;
         Invoke("setCanRoll", 1.2f);
-        Invoke("setDefaultSpeed", 0.6f);
+
+        if(!speed_boost_active)
+        {
+            Invoke("setDefaultSpeed", 0.6f);
+        }
+        
     }
 
     private void jump(InputAction.CallbackContext ctx)
     {
-        /*if (isGrounded() && can_jump)
-        {
-            player_animator.SetBool("jumping", true);
-            can_jump = false;
-            player_dir += Vector3.up * jump_force;
-            jump_counter++;
-        }*/
-
         if(can_jump)
         {
             if(!double_jump_active && isGrounded())
@@ -94,12 +94,6 @@ public class PlayerController : MonoBehaviour
             {
                 player_animator.SetBool("jumping", true);
                 player_dir += Vector3.up * jump_force;
-
-               /* if(isGrounded())
-                {
-                    Invoke("setCanJump", 0.2f);
-                }*/
-
                 jump_counter++;
                 can_jump = false;
             }
@@ -131,6 +125,8 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+       
+
         if (isGrounded())
         {
             jump_counter = 0;
@@ -154,6 +150,14 @@ public class PlayerController : MonoBehaviour
         {
             player_animator.SetBool("grounded", false);
         }
+
+        if(rod_timer > 0)
+        {
+            rod_timer -= 1 * Time.deltaTime;
+        }
+
+        var rod = trail_system.emission;
+        rod.rateOverDistance = rod_timer;
 
     }
 
@@ -242,17 +246,28 @@ public class PlayerController : MonoBehaviour
     void setDefaultSpeed()
     {
         player_speed = default_player_speed;
+        speed_boost_active = false;
     }
 
     public void addSpeedPowerUp(float speed_boost, float time)
     {
-        Debug.Log("add speed");
-        player_speed += speed_boost;
-        Invoke("setDefaultSpeed", time);
+        rod_timer = time;
+
+        if(!speed_boost_active)
+        {
+            speed_boost_active = true;
+            player_speed += speed_boost;
+            Invoke("setDefaultSpeed", time);
+        }
+        
     }
     public void setDoubleJump(float time)
     {
-        double_jump_active = true;
-        Invoke("setNormalJump", time);
+        if(!double_jump_active)
+        {
+            double_jump_active = true;
+            Invoke("setNormalJump", time);
+        }
+        
     }
 }

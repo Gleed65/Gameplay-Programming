@@ -28,8 +28,12 @@ public class RecievePower : MonoBehaviour
             var boost = power_up.speed_boost;
             var time = power_up.boost_time;
 
-            pc.addSpeedPowerUp(boost, time);
-            s_count_down.setTimer(time);
+            if(!pc.speed_boost_active)
+            {
+                pc.addSpeedPowerUp(boost, time);
+                s_count_down.setTimer(time);
+            }
+            
 
         }
         else if(power_up.power == POWER_UP.DoubleJump)
@@ -37,8 +41,11 @@ public class RecievePower : MonoBehaviour
 
             var jump_time = power_up.boost_time;
 
-            pc.setDoubleJump(jump_time);
-            j_count_down.setTimer(jump_time);
+            if(!pc.double_jump_active)
+            {
+                pc.setDoubleJump(jump_time);
+                j_count_down.setTimer(jump_time);
+            }
         }
 
     }
