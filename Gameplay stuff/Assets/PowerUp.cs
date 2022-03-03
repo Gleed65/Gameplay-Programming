@@ -21,10 +21,10 @@ public class PowerUp : MonoBehaviour
     public float boost_time = 0;
    
     
-    //bool show_speed = false;
+    bool show_speed = false;
 
-/*
-    #region Editor
+
+   /* #region Editor
 #if UNITY_EDITOR
 
     [CustomEditor(typeof(PowerUp))]
@@ -35,9 +35,9 @@ public class PowerUp : MonoBehaviour
             base.OnInspectorGUI();
             PowerUp power_up = (PowerUp)target;
 
-            
 
-            if(power_up.choosePower == POWER_UP.SpeedBoost)
+
+            if (power_up.power == POWER_UP.SpeedBoost)
             {
                 power_up.show_speed = EditorGUILayout.Foldout(power_up.show_speed, "Speed details", true);
 
@@ -46,7 +46,7 @@ public class PowerUp : MonoBehaviour
                     showDetails(power_up);
                 }
             }
-           
+
 
         }
 

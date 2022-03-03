@@ -5,12 +5,17 @@ using UnityEngine;
 public class RecievePower : MonoBehaviour
 {
     public GameObject player;
+    public GameObject timer;
     private PlayerController pc;
+    private SpeedCountDown s_count_down;
+    private JumpCountDown j_count_down;
 
 
     private void Awake()
     {
         pc = player.GetComponent<PlayerController>();
+        s_count_down = timer.GetComponent<SpeedCountDown>();
+        j_count_down = timer.GetComponent<JumpCountDown>();
     }
 
 
@@ -24,6 +29,7 @@ public class RecievePower : MonoBehaviour
             var time = power_up.boost_time;
 
             pc.addSpeedPowerUp(boost, time);
+            s_count_down.setTimer(time);
 
         }
         else if(power_up.power == POWER_UP.DoubleJump)
@@ -32,6 +38,7 @@ public class RecievePower : MonoBehaviour
             var jump_time = power_up.boost_time;
 
             pc.setDoubleJump(jump_time);
+            j_count_down.setTimer(jump_time);
         }
 
     }

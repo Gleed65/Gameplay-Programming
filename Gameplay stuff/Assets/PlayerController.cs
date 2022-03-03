@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviour
                 }*/
 
                 jump_counter++;
+                can_jump = false;
             }
         }
 
@@ -130,8 +131,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(can_jump);
-
         if (isGrounded())
         {
             jump_counter = 0;
