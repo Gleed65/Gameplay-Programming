@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
     private void roll(InputAction.CallbackContext ctx)
     {
-        if (can_roll)
+        if (can_roll && isGrounded())
         {
             player_speed += roll_force;
             player_animator.SetTrigger("roll");

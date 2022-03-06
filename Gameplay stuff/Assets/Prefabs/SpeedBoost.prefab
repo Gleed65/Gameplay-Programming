@@ -110,5 +110,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 0
-  speed_boost: 20
-  boost_time: 5
+  speed_boost: 0
+  boost_time: 0
