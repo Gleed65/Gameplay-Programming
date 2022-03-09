@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     //Using the C# script
 
     private PlayerInputAsset player_input;
+    private PlayerInteractions interactions;
+    public GameObject door;
     public ParticleSystem trail_system;
     public Camera cam;
     private InputAction move;
@@ -16,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 player_dir = Vector3.zero;
     private Vector3 look_dir;
     private Animator player_animator;
+    private Animator door_animator;
     private bool grounded;
     private bool can_jump = true;
     private bool can_roll = true;
@@ -35,8 +38,10 @@ public class PlayerController : MonoBehaviour
     {
         player_input = new PlayerInputAsset();
         player_animator = GetComponent<Animator>();
+        interactions = GetComponent<PlayerInteractions>();
         rb = GetComponent<Rigidbody>();
         player_speed = default_player_speed;
+        door_animator = door.GetComponent<Animator>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -103,6 +108,11 @@ public class PlayerController : MonoBehaviour
     }
     private void leftAttack(InputAction.CallbackContext ctx)
     {
+        if(interactions.can_interact)
+        {
+            door_animator.SetTrigger("open");
+        }
+
         player_animator.SetTrigger("left attack");
     }
     private void rightAttack(InputAction.CallbackContext ctx)
@@ -125,8 +135,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-       
-
         if (isGrounded())
         {
             jump_counter = 0;
@@ -198,7 +206,6 @@ public class PlayerController : MonoBehaviour
         lookAt();
 
     }
-
     private Vector3 GetCameraForward(Camera cam)
     {
         Vector3 forward = cam.transform.forward;
