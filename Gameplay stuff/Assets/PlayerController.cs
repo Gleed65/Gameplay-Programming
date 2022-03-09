@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 
 
 public class PlayerController : MonoBehaviour
@@ -10,7 +11,11 @@ public class PlayerController : MonoBehaviour
 
     private PlayerInputAsset player_input;
     private PlayerInteractions interactions;
+    private Switch door_switch;
+    public GameObject switch_obj;
     public GameObject door;
+    public GameObject timeline_obj;
+    private PlayableDirector door_cutscene;
     public ParticleSystem trail_system;
     public Camera cam;
     private InputAction move;
@@ -39,9 +44,11 @@ public class PlayerController : MonoBehaviour
         player_input = new PlayerInputAsset();
         player_animator = GetComponent<Animator>();
         interactions = GetComponent<PlayerInteractions>();
+        door_switch = switch_obj.GetComponent<Switch>();
         rb = GetComponent<Rigidbody>();
         player_speed = default_player_speed;
         door_animator = door.GetComponent<Animator>();
+        door_cutscene = timeline_obj.GetComponent<PlayableDirector>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -108,10 +115,18 @@ public class PlayerController : MonoBehaviour
     }
     private void leftAttack(InputAction.CallbackContext ctx)
     {
-        if(interactions.can_interact)
+        if(interactions.can_interact && !door_switch.switch_used)
         {
-            door_animator.SetTrigger("open");
+            door_cutscene.Play();
+            cam.enabled = false;
+            door_switch.switch_used = true;
+            interactions.interact_text.text = null;
+
+            float duration = (float)door_cutscene.duration;
+
+            Invoke("setCamActive", duration);
         }
+
 
         player_animator.SetTrigger("left attack");
     }
@@ -254,6 +269,11 @@ public class PlayerController : MonoBehaviour
     {
         player_speed = default_player_speed;
         speed_boost_active = false;
+    }
+    void setCamActive()
+    {
+
+        cam.enabled = true;
     }
 
     public void addSpeedPowerUp(float speed_boost, float time)

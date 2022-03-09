@@ -8,16 +8,18 @@ public class PlayerInteractions : MonoBehaviour
 
     public bool can_interact = false;
     public Text interact_text;
+    private Switch door_switch;
+    public GameObject switch_obj;
 
-    private void Update()
+    private void Awake()
     {
-        Debug.Log(can_interact);
+        door_switch = switch_obj.GetComponent<Switch>();
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "switch trigger")
+        if(other.tag == "switch trigger" && !door_switch.switch_used)
         {
             can_interact = true;
             interact_text.text = "Press left attack to interact";
