@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
     public GameObject timeline_obj;
     private PlayableDirector door_cutscene;
     public ParticleSystem trail_system;
-    public Camera cam;
+    public Camera tp_cam;
+    public Camera cs_cam;
     private InputAction move;
     private Rigidbody rb;
     private Vector3 player_dir = Vector3.zero;
@@ -49,6 +50,8 @@ public class PlayerController : MonoBehaviour
         player_speed = default_player_speed;
         door_animator = door.GetComponent<Animator>();
         door_cutscene = timeline_obj.GetComponent<PlayableDirector>();
+
+        cs_cam.enabled = false;
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -118,9 +121,11 @@ public class PlayerController : MonoBehaviour
         if(interactions.can_interact && !door_switch.switch_used)
         {
             door_cutscene.Play();
-            cam.enabled = false;
+            tp_cam.enabled = false;
             door_switch.switch_used = true;
             interactions.interact_text.text = null;
+
+            cs_cam.enabled = true;
 
             float duration = (float)door_cutscene.duration;
 
@@ -186,8 +191,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        player_dir += move.ReadValue<Vector2>().x * GetCameraRight(cam) * player_speed;
-        player_dir += move.ReadValue<Vector2>().y * GetCameraForward(cam) * player_speed;
+        player_dir += move.ReadValue<Vector2>().x * GetCameraRight(tp_cam) * player_speed;
+        player_dir += move.ReadValue<Vector2>().y * GetCameraForward(tp_cam) * player_speed;
 
         rb.AddForce(player_dir, ForceMode.Impulse);
 
@@ -273,7 +278,8 @@ public class PlayerController : MonoBehaviour
     void setCamActive()
     {
 
-        cam.enabled = true;
+        tp_cam.enabled = true;
+        cs_cam.enabled = false;
     }
 
     public void addSpeedPowerUp(float speed_boost, float time)
