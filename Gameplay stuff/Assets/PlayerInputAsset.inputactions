@@ -52,6 +52,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press"
+                },
+                {
+                    "name": "lock",
+                    "type": "Button",
+                    "id": "ad7d2d14-1d00-4137-bab3-9fe07676a16d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
                 }
             ],
             "bindings": [
@@ -228,6 +236,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "roll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "012449ae-33cc-4dd2-916e-d533c2688ff3",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "lock",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

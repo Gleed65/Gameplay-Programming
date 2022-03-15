@@ -65,6 +65,14 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press""
+                },
+                {
+                    ""name"": ""lock"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad7d2d14-1d00-4137-bab3-9fe07676a16d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -243,6 +251,17 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                     ""action"": ""roll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""012449ae-33cc-4dd2-916e-d533c2688ff3"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""lock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -257,6 +276,7 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
         m_Player_leftattack = m_Player.FindAction("left attack", throwIfNotFound: true);
         m_Player_rightattack = m_Player.FindAction("right attack", throwIfNotFound: true);
         m_Player_roll = m_Player.FindAction("roll", throwIfNotFound: true);
+        m_Player_lock = m_Player.FindAction("lock", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -312,6 +332,7 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_leftattack;
     private readonly InputAction m_Player_rightattack;
     private readonly InputAction m_Player_roll;
+    private readonly InputAction m_Player_lock;
     public struct PlayerActions
     {
         private @PlayerInputAsset m_Wrapper;
@@ -322,6 +343,7 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
         public InputAction @leftattack => m_Wrapper.m_Player_leftattack;
         public InputAction @rightattack => m_Wrapper.m_Player_rightattack;
         public InputAction @roll => m_Wrapper.m_Player_roll;
+        public InputAction @lock => m_Wrapper.m_Player_lock;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -349,6 +371,9 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                 @roll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
                 @roll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
                 @roll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
+                @lock.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLock;
+                @lock.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLock;
+                @lock.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLock;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -371,6 +396,9 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                 @roll.started += instance.OnRoll;
                 @roll.performed += instance.OnRoll;
                 @roll.canceled += instance.OnRoll;
+                @lock.started += instance.OnLock;
+                @lock.performed += instance.OnLock;
+                @lock.canceled += instance.OnLock;
             }
         }
     }
@@ -383,5 +411,6 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
         void OnLeftattack(InputAction.CallbackContext context);
         void OnRightattack(InputAction.CallbackContext context);
         void OnRoll(InputAction.CallbackContext context);
+        void OnLock(InputAction.CallbackContext context);
     }
 }
