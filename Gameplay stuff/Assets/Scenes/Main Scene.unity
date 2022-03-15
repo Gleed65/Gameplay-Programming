@@ -8479,6 +8479,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 945718055}
     - target: {fileID: 3330531124886788961, guid: 818cfd1800bcc2a45b185c9c10104b9b, type: 3}
+      propertyPath: cs_cam
+      value: 
+      objectReference: {fileID: 1529081830}
+    - target: {fileID: 3330531124886788961, guid: 818cfd1800bcc2a45b185c9c10104b9b, type: 3}
+      propertyPath: tp_cam
+      value: 
+      objectReference: {fileID: 346809594}
+    - target: {fileID: 3330531124886788961, guid: 818cfd1800bcc2a45b185c9c10104b9b, type: 3}
       propertyPath: max_speed
       value: 10
       objectReference: {fileID: 0}
