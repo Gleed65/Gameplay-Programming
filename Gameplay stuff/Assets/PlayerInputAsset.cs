@@ -262,6 +262,17 @@ public class @PlayerInputAsset : IInputActionCollection, IDisposable
                     ""action"": ""lock"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""add2562b-7469-4008-a5d0-f05674dd4c64"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""lock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
