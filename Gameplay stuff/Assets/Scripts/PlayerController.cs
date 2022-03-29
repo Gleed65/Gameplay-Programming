@@ -303,6 +303,11 @@ public class PlayerController : MonoBehaviour
         cs_cam.enabled = false;
     }
 
+    public ref float getSpeed()
+    {
+        return ref player_speed;
+    }
+
     public void addSpeedPowerUp(float speed_boost, float time)
     {
         rod_timer = time;
