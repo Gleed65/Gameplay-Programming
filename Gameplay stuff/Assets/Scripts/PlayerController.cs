@@ -94,25 +94,25 @@ public class PlayerController : MonoBehaviour
         can_roll = false;
         Invoke("setCanRoll", 1.2f);
 
-        if(!speed_boost_active)
+        if (!speed_boost_active)
         {
             Invoke("setDefaultSpeed", 0.6f);
         }
-        
+
     }
 
     private void jump(InputAction.CallbackContext ctx)
     {
-        if(can_jump)
+        if (can_jump)
         {
-            if(!double_jump_active && isGrounded())
+            if (!double_jump_active && isGrounded())
             {
                 player_animator.SetBool("jumping", true);
                 can_jump = false;
-                player_dir += Vector3.up * jump_force; 
+                player_dir += Vector3.up * jump_force;
                 Invoke("setCanJump", 1.2f);
             }
-            if(double_jump_active)
+            if (double_jump_active)
             {
                 player_animator.SetBool("jumping", true);
                 player_dir += Vector3.up * jump_force;
@@ -121,11 +121,11 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-      
+
     }
     private void leftAttack(InputAction.CallbackContext ctx)
     {
-        if(interactions.can_interact && !door_switch.switch_used)
+        if (interactions.can_interact && !door_switch.switch_used)
         {
             door_cutscene.Play();
             tp_cam.enabled = false;
@@ -149,12 +149,13 @@ public class PlayerController : MonoBehaviour
 
     private void lockOn(InputAction.CallbackContext ctx)
     {
-        if(!locked_on)
+        if (!locked_on)
         {
             fl_cam.LookAt = enemy.transform;
             locked_on = true;
 
-        }else
+        }
+        else
         {
             fl_cam.LookAt = player_look_at.transform;
             locked_on = false;
@@ -166,7 +167,7 @@ public class PlayerController : MonoBehaviour
 ;
         if (Physics.Raycast(ray, out RaycastHit hit, 0.5f))
         {
-            
+
             return true;
         }
         else
@@ -200,13 +201,19 @@ public class PlayerController : MonoBehaviour
             player_animator.SetBool("grounded", false);
         }
 
-        if(rod_timer > 0)
+        if (rod_timer > 0)
         {
             rod_timer -= 1 * Time.deltaTime;
         }
 
         var rod = trail_system.emission;
         rod.rateOverDistance = rod_timer;
+
+
+        if(transform.position.y <= -10)
+        {
+            transform.position = new Vector3(38.4300003f, 0.254999995f, 19.5200005f);
+        }
 
     }
 
@@ -312,21 +319,38 @@ public class PlayerController : MonoBehaviour
     {
         rod_timer = time;
 
-        if(!speed_boost_active)
+        if (!speed_boost_active)
         {
             speed_boost_active = true;
             player_speed += speed_boost;
             Invoke("setDefaultSpeed", time);
         }
-        
+
     }
     public void setDoubleJump(float time)
     {
-        if(!double_jump_active)
+        if (!double_jump_active)
         {
             double_jump_active = true;
             Invoke("setNormalJump", time);
         }
-        
+
+    }
+
+  
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "platform")
+        {
+            this.transform.parent = other.transform;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "platform")
+        {
+            this.transform.parent = null;
+        }
     }
 }
