@@ -5,27 +5,26 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-
-    public float detect_radius;
-
-    Transform target;
     NavMeshAgent agent;
+    Transform target;
+    FieldOfView fov;
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        target = GameObject.Find("Player").transform;
+        fov = GetComponent<FieldOfView>();
+
+        target = fov.player.transform;
+       
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(fov.player_in_view)
+        {
+            agent.SetDestination(target.position);
+        }
         
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detect_radius);
-    }
 }

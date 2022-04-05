@@ -17,8 +17,6 @@ public class CameraOnSpline : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(cam_on_spline);
-
         var vel = GetComponent<Rigidbody>().velocity;
 
         if(vel.x > 0 || vel.z > 0)
