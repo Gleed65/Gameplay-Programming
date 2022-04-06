@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     int enemy_health = 10;
     int damage = 10;
     float detect_radius = 20;
-    float time_between_attacks = 3;
+    float time_between_attacks = 2;
     float current_attack_time = 0;
 
     ENEMY_STATES enemy_state;
@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
 
-        //Debug.Log(enemy_health);
+        Debug.Log(can_damage);
 
         float distance_to_player = Vector3.Distance(target.transform.position, transform.position);
 
@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour
             enemy_state = ENEMY_STATES.CHASING;
             
         }
+        
 
 
         if (enemy_state == ENEMY_STATES.CHASING)
@@ -73,13 +74,14 @@ public class Enemy : MonoBehaviour
         {
             current_attack_time += Time.deltaTime;
 
-            if(current_attack_time > 2.5 && current_attack_time < 3)
+            if(current_attack_time > 1.5 && current_attack_time < 2)
             {
                 telegraph.GetComponent<MeshRenderer>().enabled = true;
             }
             else
             {
                 telegraph.GetComponent<MeshRenderer>().enabled = false;
+                
             }
 
             if (current_attack_time >= time_between_attacks)
@@ -98,6 +100,11 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
 
+        if(can_damage)
+        {
+            Invoke("setCantDamage", 0.6f);
+        }
+
     }
 
     void faceTarget()
@@ -109,8 +116,10 @@ public class Enemy : MonoBehaviour
 
     void attack()
     {
+       
         enemy_rb.AddForce(transform.forward * 25, ForceMode.Impulse);
         can_damage = true;
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -123,8 +132,6 @@ public class Enemy : MonoBehaviour
 
                 if(can_damage)
                 pc.takeDamage(damage);
-
-                Invoke("setCantDamage", 0.1f);
             }
         }
     }

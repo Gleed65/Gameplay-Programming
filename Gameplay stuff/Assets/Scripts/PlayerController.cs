@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(health);
+        //Debug.Log(health);
 
         if (isGrounded())
         {
