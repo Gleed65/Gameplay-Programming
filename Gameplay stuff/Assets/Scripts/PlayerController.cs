@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 player_dir = Vector3.zero;
     private Vector3 look_dir;
     private Animator player_animator;
-    private Animator door_animator;
     private bool grounded;
     private bool can_jump = true;
     private bool can_roll = true;
@@ -43,6 +42,10 @@ public class PlayerController : MonoBehaviour
     public bool speed_boost_active = false;
     private float rod_timer = 0;
     private bool locked_on = false;
+    public bool can_damage = false;
+
+    public int health = 50;
+    public int damage = 2;
 
 
     private void Awake()
@@ -53,7 +56,6 @@ public class PlayerController : MonoBehaviour
         door_switch = switch_obj.GetComponent<Switch>();
         rb = GetComponent<Rigidbody>();
         player_speed = default_player_speed;
-        door_animator = door.GetComponent<Animator>();
         door_cutscene = timeline_obj.GetComponent<PlayableDirector>();
 
         cs_cam.enabled = false;
@@ -141,10 +143,17 @@ public class PlayerController : MonoBehaviour
 
 
         player_animator.SetTrigger("left attack");
+
+        can_damage = true;
+        Invoke("setCanDamage", 0.5f);
     }
     private void rightAttack(InputAction.CallbackContext ctx)
     {
         player_animator.SetTrigger("right attack");
+
+        can_damage = true;
+
+        Invoke("setCanDamage", 0.5f);
     }
 
     private void lockOn(InputAction.CallbackContext ctx)
@@ -177,6 +186,8 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log(health);
+
         if (isGrounded())
         {
             jump_counter = 0;
@@ -352,5 +363,15 @@ public class PlayerController : MonoBehaviour
         {
             this.transform.parent = null;
         }
+    }
+
+    public void takeDamage(int damage_to_take)
+    {
+        health -= damage_to_take;
+    }
+
+    private void setCanDamage()
+    {
+        can_damage = false;
     }
 }

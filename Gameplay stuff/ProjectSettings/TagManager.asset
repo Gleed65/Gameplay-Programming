@@ -6,6 +6,7 @@ TagManager:
   tags:
   - switch trigger
   - platform
+  - Enemy
   layers:
   - Default
   - TransparentFX
