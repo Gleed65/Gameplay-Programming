@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 3158205192820440226}
   - component: {fileID: 3158205192820440227}
   - component: {fileID: 3158205192820440252}
+  - component: {fileID: 89468338445766475}
   - component: {fileID: 3158205192820440253}
   - component: {fileID: 3158205192820440254}
   m_Layer: 0
@@ -232,6 +233,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   telegraph: {fileID: 3158205191427235008}
+--- !u!114 &89468338445766475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3158205192820440255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfdaf5fe0f60ac544bbfdd206b130516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawn_object: {fileID: 3158205192820440255, guid: 6c7ae3ffec7e31a44b66885a5f25281d, type: 3}
 --- !u!114 &3158205192820440253
 MonoBehaviour:
   m_ObjectHideFlags: 0

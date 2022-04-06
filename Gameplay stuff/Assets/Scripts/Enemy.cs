@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     GameObject target;
     FieldOfView fov;
     Rigidbody enemy_rb;
-    Material enemy_mat;
+    SpawnMedEnemy spawn_script;
 
     bool can_damage = false;
 
@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
     float detect_radius = 20;
     float time_between_attacks = 2;
     float current_attack_time = 0;
+    float set_move_timer = 0;
+    Vector3 patrol_point;
 
     ENEMY_STATES enemy_state;
 
@@ -32,12 +34,16 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        enemy_mat = GetComponent<Renderer>().material;
         fov = GetComponent<FieldOfView>();
         agent = GetComponent<NavMeshAgent>();
         enemy_rb = GetComponent<Rigidbody>();
         target = GameObject.Find("Player");
         pc = target.GetComponent<PlayerController>();
+        spawn_script = GetComponent<SpawnMedEnemy>();
+
+        enemy_state = ENEMY_STATES.PATROLLING;
+
+        enemy_health = 10;
        
     }
 
@@ -45,7 +51,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(can_damage);
+        Debug.Log(set_move_timer);
 
         float distance_to_player = Vector3.Distance(target.transform.position, transform.position);
 
@@ -54,7 +60,28 @@ public class Enemy : MonoBehaviour
             enemy_state = ENEMY_STATES.CHASING;
             
         }
+        else
+        {
+            enemy_state = ENEMY_STATES.PATROLLING;
+        }
         
+        if(enemy_state == ENEMY_STATES.PATROLLING)
+        {
+            
+            float timer_max = 2;
+
+            set_move_timer += Time.deltaTime;
+
+            if(set_move_timer >= timer_max)
+            {
+                getMovePoint();
+                set_move_timer = 0;
+                
+            }
+
+            agent.SetDestination(patrol_point);
+
+        }
 
 
         if (enemy_state == ENEMY_STATES.CHASING)
@@ -68,7 +95,6 @@ public class Enemy : MonoBehaviour
                 enemy_state = ENEMY_STATES.ATTACKING;
             }
         }
-
 
         if(enemy_state == ENEMY_STATES.ATTACKING)
         {
@@ -98,6 +124,8 @@ public class Enemy : MonoBehaviour
         if(enemy_health <= 0)
         {
             Destroy(gameObject);
+            spawn_script.spawn();
+
         }
 
         if(can_damage)
@@ -132,6 +160,8 @@ public class Enemy : MonoBehaviour
 
                 if(can_damage)
                 pc.takeDamage(damage);
+
+                enemy_rb.AddForce(-transform.forward * 5, ForceMode.Impulse);
             }
         }
     }
@@ -144,5 +174,13 @@ public class Enemy : MonoBehaviour
     public void takeDamage(int damage_to_take)
     {
         enemy_health -= damage_to_take;
+    }
+
+    void getMovePoint()
+    {
+        float random_z = Random.Range(-10, 10);
+        float random_x = Random.Range(-10, 10);
+
+        patrol_point = new Vector3(transform.position.x + random_x, transform.position.y, transform.position.x + random_x);
     }
 }

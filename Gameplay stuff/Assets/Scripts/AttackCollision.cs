@@ -14,8 +14,6 @@ public class AttackCollision : MonoBehaviour
     private void Start()
     {
         pc = player.GetComponent<PlayerController>();
-        enemy_script = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -27,6 +25,9 @@ public class AttackCollision : MonoBehaviour
            
             if (pc.can_damage)
             {
+
+                enemy_script = collision.gameObject.GetComponent<Enemy>();
+
                 enemy_script.takeDamage(pc.damage);
                 pc.can_damage = false;
 
