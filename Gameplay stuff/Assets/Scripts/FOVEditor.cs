@@ -1,7 +1,10 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+
+
 
 
 [CustomEditor(typeof(FieldOfView))]
@@ -22,7 +25,7 @@ public class FOVEditor : Editor
         Handles.DrawLine(fov.transform.position, fov.transform.position + FOV_angle_left * fov.radius);
         Handles.DrawLine(fov.transform.position, fov.transform.position + FOV_angle_right * fov.radius);
 
-        if(fov.player_in_view)
+        if (fov.player_in_view)
         {
             Handles.color = Color.yellow;
             Handles.DrawLine(fov.transform.position, fov.player.transform.position);
@@ -37,4 +40,8 @@ public class FOVEditor : Editor
         return new Vector3(Mathf.Sin(angle_in_degrees * Mathf.Deg2Rad), 0, Mathf.Cos(angle_in_degrees * Mathf.Deg2Rad));
     }
 
+
+
+
 }
+#endif

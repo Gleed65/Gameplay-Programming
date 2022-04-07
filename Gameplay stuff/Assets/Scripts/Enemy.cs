@@ -72,11 +72,11 @@ public class Enemy : MonoBehaviour
 
             set_move_timer += Time.deltaTime;
 
-            if(set_move_timer >= timer_max)
+            if (set_move_timer >= timer_max)
             {
                 getMovePoint();
                 set_move_timer = 0;
-                
+
             }
 
             agent.SetDestination(patrol_point);
